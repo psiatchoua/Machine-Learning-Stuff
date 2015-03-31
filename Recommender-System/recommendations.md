@@ -15,16 +15,16 @@ CREATE TABLE reco.users (
     user_name text
 );
 
-DROP TABLE IF EXISTS reco.movies;
-CREATE TABLE reco.movies (
-    mv_id integer primary key,
-    mv_name text
+DROP TABLE IF EXISTS reco.items;
+CREATE TABLE reco.items (
+    item_id integer primary key,
+    item_name text
 );
 
 DROP TABLE IF EXISTS reco.critics;
 CREATE TABLE reco.critics (
     user_id integer,
-    mv_id integer,
+    item_id integer,
     rating numeric
 ); 
 ```
@@ -40,7 +40,7 @@ VALUES (1,'Lisa Rose'),
 (6,'Jack Matthews'),
 (7,'Toby');
 
-INSERT INTO reco.movies(mv_id,mv_name)
+INSERT INTO reco.items(item_id,item_name)
 VALUES (1,'Lady in the Water'),
 (2,'Snakes on a Plane'),
 (3,'Just My Luck'),
@@ -48,7 +48,7 @@ VALUES (1,'Lady in the Water'),
 (5,'You, Me and Dupree'),
 (6,'The Night Listener');
 
-INSERT INTO reco.critics (user_id, mv_id, rating)
+INSERT INTO reco.critics (user_id, item_id, rating)
 VALUES 
 (1,1,2.5),
 (1,2,3.5),

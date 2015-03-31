@@ -96,7 +96,7 @@ class recommender:
 		''' helper function to calculate the distance between two users '''
 		result = 0
 		try:
-			query = '''select user_id, mv_id, rating from reco.critics where user_id in ( 
+			query = '''select user_id, item_id, rating from reco.critics where user_id in ( 
 				''' + str(user1) + ''',''' + str(user2) + ''')'''
 			
 			self.db.execute(query, {}, "Error while selecting data in internal method __sim_distance")
@@ -128,9 +128,9 @@ class recommender:
 		'''
 		try:
 			query = ''' with common_prefs as (
-			select distinct mv_id from reco.critics where user_id = %s
+			select distinct item_id from reco.critics where user_id = %s
 			 intersect 
-			select distinct mv_id from reco.critics where user_id = %s
+			select distinct item_id from reco.critics where user_id = %s
 			 )
 			select count(*) from common_prefs;
 			'''
@@ -183,19 +183,19 @@ class recommender:
 		try:
 			# get the unseen movies from the db
 			query = '''with x as (
-			select m.mv_id
-			from reco.movies m
+			select m.item_id
+			from reco.items m
 			left join reco.critics c 
-			on m.mv_id = c.mv_id and c.user_id = %s
-			where c.mv_id is null
+			on m.item_id = c.item_id and c.user_id = %s
+			where c.item_id is null
 			)
-			select * from reco.critics where mv_id in (select mv_id from x);'''
+			select * from reco.critics where item_id in (select item_id from x);'''
 
 			self.db.execute(query, (str(user_id)), "Error querying data in get_recommendations")
 			rows = self.db.fetchall()
 			critics = []
 			for row in rows:
-				critics.append((row[0], row[1], row[2])) #(user_id, mv_id, rating)
+				critics.append((row[0], row[1], row[2])) #(user_id, item_id, rating)
 			
 			if critics:	
 				users = set([x[0] for x in critics])
@@ -234,13 +234,6 @@ def main():
 		print reco.user_similarity_distance(1, 2, 'Euclidian')
 		print reco.top_matches(1)
 		print reco.get_recommendations(7, 3)
-
-		# fetch a list of users to see the user's name
-		# db.cur.execute("""select * from reco.users;""")
-		
-		# rows = db.fetchall()
-		# for row in rows:
-		# 	print row[0], row[1]
 	except:
 		logger.error('Unexpected error in main(): ' + str(sys.exc_info()[0]))
 	
