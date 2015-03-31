@@ -94,10 +94,6 @@ VALUES
 ```
 
 ```sql
-WITH X as (
-SELECT distinct mv_id from reco.critics where user_id = 2
-INTERSECT 
-SELECT distinct mv_id from reco.critics where user_id = 3
-)
-select count(*) from X;
+delete from reco.critics where user_id = 8;
+delete from reco.users where user_id = 8;
 ```
